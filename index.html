@@ -7,12 +7,15 @@
     <title>BlackJack</title>
 </head>
 <body>
+    <h1 id="dealerh1"></h1>
     <div id="dealer"></div>
+    <h1 id="playerh1"></h1>
     <div id="player"></div>
     <input type="text" id="bet" name="bet">
     <input type="button" value="DEAL" id="deal" name="deal" onclick="deal()"><br>
-    <input type="button" value="HIT" id="hit" name="hit"><br>
-    <input type="button" value="STAND" id="stand" name="stand"><br>
+    <input type="button" value="HIT" id="hit" name="hit" onclick="hit()"><br>
+    <input type="button" value="STAND" id="stand" name="stand" onclick="stand()"><br>
+    <h1 id="chips"></h1>
 </body>
 <script src="blackjack.js"></script>
 </html>

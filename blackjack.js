@@ -62,6 +62,10 @@ let dealButton = document.getElementById("deal");
 let standButton = document.getElementById("stand");
 let hitButton = document.getElementById("hit");
 let betField = document.getElementById("bet");
+let chipsh1 = document.getElementById("chips")
+let chips = 500;
+let bet = 0;
+chipsh1.innerHTML = "Chips: " + chips;
 
 standButton.style.visibility = "hidden";
 hitButton.style.visibility = "hidden";
@@ -87,4 +91,86 @@ function deal(){
     betField.style.visibility = "hidden";
     standButton.style.visibility = "visible";
     hitButton.style.visibility = "visible";
+
+    bet = parseInt(betField.value);
+
+    pointRefresh();
+}
+
+function pointCount(array){
+    let point = 0;
+    for (const a of array) {
+        let pieces = a.split("_");
+        if(!isNaN(pieces[0])){
+            point += parseInt(pieces[0])
+        }
+        else if (pieces[0] === "ace"){
+            if(point + 11 > 21)
+            {
+                point++;
+            }else
+            {
+                point += 11;
+            }
+        }else{
+            point += 10;
+        }
+    }
+    return point;
+}
+
+function pointRefresh(){
+    let playerPoint = pointCount(playerCards);
+    let dealerPoint = pointCount(dealerCards);
+    document.getElementById("playerh1").innerHTML = playerPoint;
+    document.getElementById("dealerh1").innerHTML = dealerPoint;
+}
+
+function hit(){
+    playerCards.push(pull());
+    playerDiv.innerHTML +=  "<img src=kartyak/" + playerCards[playerCards.length -1] + ">";
+    pointRefresh();
+    if(pointCount(playerCards) > 21)
+    {
+        window.alert("vesztettel!")
+        chips -= bet;
+        return
+    }
+}
+
+function stand(){
+    while (pointCount(dealerCards) < 17){
+        dealerCards.push(pull());
+        dealerDiv.innerHTML +=  "<img src=kartyak/" + dealerCards[dealerCards.length -1] + ">";
+        pointRefresh();
+    }
+    if(pointCount(dealerCards) > 21){
+        window.alert("gyoztel")
+        chips += bet *2
+        setTimeout(reset, 2000);
+    }
+
+    if(pointCount(playerCards) > (dealerCards)){
+        window.alert("gyoztel!")
+        chips += bet *2
+    }else if(pointCount(playerCards) > pointCount(dealerCards)){
+        window.alert("Dontetlen")
+    }
+    setTimeout(reset, 2000);
+
+}
+function reset(){
+    dealerDiv.innerHTML = "";
+    playerDiv.innerHTML = "";
+    playerCards = [];
+    dealerCards = [];
+    pullingDeck = deck.slice(0);
+
+    dealButton.style.visibility = "visible";
+    betField.style.visibility = "visible";
+    standButton.style.visibility = "hidden";
+    hitButton.style.visibility = "hidden";
+    document.getElementById("playerh1").innerHTML = "";
+    document.getElementById("dealerh1").innerHTML = "";
+    chipsh1.innerText = "Chips: " + chips;
 }
